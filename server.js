@@ -24,6 +24,9 @@ app.get('/', (req, res) => { res.send("Hello world") })
 app.get('/users', (req, res) => {
     db.select('*').from('users').then(user => res.json(user))
 })
+app.get('/login', (req, res) => {
+    db.select('*').from('login').then(user => res.json(user))
+})
 app.post('/signin', signin.handleSignin(db, bcrypt))
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) })
 app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) })
