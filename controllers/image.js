@@ -5,6 +5,11 @@ const app = new Clarifai.App({
     apiKey: process.env.API_KEY
 });
 
+const handleImageUpload = () => (req, res) => {
+    const values = Object.values(req.files);
+    res.json(values)
+}
+
 const handleApiCall = (req, res) => {
     app.models
         // HEADS UP! Sometimes the Clarifai Models can be down or not working as they are constantly getting updated.
@@ -36,5 +41,6 @@ const handleImage = (req, res, db) => {
 
 module.exports = {
     handleImage,
-    handleApiCall
+    handleApiCall,
+    handleImageUpload
 }
