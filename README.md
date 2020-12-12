@@ -1,12 +1,13 @@
-# SmartBrain-api - v2
-Final project for ZTM course
+# Facebrain Server
 
-1. Clone this repo
-2. Run `npm install`
-3. Run `npm start`
-4. You must add your own API key in the `controllers/image.js` file to connect to Clarifai API
-5. Add your own database credentials to `server.js` line 12
+ENV params:
 
-You can grab Clarifai API key [here](https://www.clarifai.com/)
+`API_CLARIFAI` - sign up Claridai, get API key
 
-** Make sure you use postgreSQL instead of mySQL for this code base.
+`CLOUDINARY_API_KEY` - sign up Cloudinary, get api key
+
+`CLOUDINARY_API_SECRET` - Cloudinary api secret
+
+`CLOUDINARY_NAME` - Cloudinary user name
+
+`DATABASE_URL` - postgres base url

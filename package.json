@@ -1,29 +1,27 @@
 {
-    "name": "node",
-    "version": "1.0.0",
-    "main": "script.js",
-    "scripts": {
-        "serve": "nodemon server.js",
-        "start": "node server.js"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "bcrypt-nodejs": "0.0.3",
-        "body-parser": "^1.19.0",
-        "clarifai": "^2.9.1",
-        "cloudinary": "^1.23.0",
-        "cors": "^2.8.5",
-        "dotenv": "^8.2.0",
-        "express": "^4.17.1",
-        "express-form-data": "^2.0.14",
-        "knex": "^0.21.6",
-        "multer": "^1.4.2",
-        "pg": "^8.3.3"
-    },
-    "devDependencies": {
-        "nodemon": "^2.0.4"
-    },
-    "description": ""
+  "name": "facebrain-server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Tereshka",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.19.0",
+    "clarifai": "^2.9.0",
+    "cloudinary": "^1.14.0",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "express": "^4.17.1",
+    "express-form-data": "^2.0.10",
+    "knex": "^0.19.5",
+    "multer": "^1.4.2",
+    "pg": "^7.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
 }
