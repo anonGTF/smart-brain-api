@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
     res.send("welcome");
 });
 
-app.post("/signin", signin.handleSignIn(db, bcrypt));
+app.post("/signin", signin.handleSignin(db, bcrypt));
 
 app.post("/register", register.handleRegister(db, bcrypt));
 
