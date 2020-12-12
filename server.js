@@ -18,9 +18,9 @@ const knexConfig = require('./knexfile')[environment];
 const db = knex(knexConfig);
 const app = express();
 
-app.use(cors())
 app.use(bodyParser.json());
-app.use(formData.json());
+app.use(cors())
+app.use(formData.parse());
 
 app.get('/', (req, res) => { res.send("Hello world") })
 app.post('/signin', signin.handleSignin(db, bcrypt))
