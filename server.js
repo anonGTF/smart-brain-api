@@ -18,31 +18,31 @@ app.use(cors());
 app.use(formData.parse());
 
 const db = knex({
-	client: 'pg',
-	connection: {
-		connectionString: process.env.DATABASE_URL,
-		ssl: true
-	}
+    client: 'pg',
+    connection: {
+        connectionString: process.env.DATABASE_URL,
+        ssl: true
+    }
 });
 
 app.get("/", (req, res) => {
-	res.send("welcome");
+    res.send("welcome");
 });
 
 app.post("/signin", signin.handleSignIn(db, bcrypt));
 
 app.post("/register", register.handleRegister(db, bcrypt));
 
-app.get("/profile/:id", profile.handleProfile(db));
+app.get("/profile/:id", profile.handleProfileGet(db));
 
 app.put("/image", image.handleImage(db));
 app.post("/imageurl", image.handleApiCall());
 app.post("/image-upload", image.handleImageUpload());
 
 app.get("*", (req, res) => {
-	res.send("sorry, nothing here((");
+    res.send("sorry, nothing here((");
 });
 
-app.listen(process.env.PORT || 3001, function(){
-	console.log("server starts");
+app.listen(process.env.PORT || 3001, function() {
+    console.log("server starts");
 });
