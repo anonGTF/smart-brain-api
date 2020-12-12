@@ -1,26 +1,43 @@
 const Clarifai = require('clarifai');
-
-//You must add your own API key here from Clarifai. 
 const app = new Clarifai.App({
     apiKey: process.env.API_KEY
 });
 
+const multer = require('multer');
+const storage = multer.diskStorage({
+    filename: function(req, file, callback) {
+        callback(null, Date.now() + file.originalname);
+    }
+});
+const imageFilter = function(req, file, cb) {
+    // accept image files only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error("Only image files are allowed!"), false);
+    }
+    cb(null, true);
+};
+const upload = multer({ storage: storage, fileFilter: imageFilter })
+
+
+const cloudinary = require("cloudinary");
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 const handleImageUpload = () => (req, res) => {
+    console.log(req.files);
     const values = Object.values(req.files);
-    res.json(values)
+    const promises = values.map(image => cloudinary.uploader.upload(image.path));
+
+    Promise
+        .all(promises)
+        .then(results => res.json(results));
 }
 
 const handleApiCall = (req, res) => {
     app.models
-        // HEADS UP! Sometimes the Clarifai Models can be down or not working as they are constantly getting updated.
-        // A good way to check if the model you are using is up, is to check them on the clarifai website. For example,
-        // for the Face Detect Mode: https://www.clarifai.com/models/face-detection
-        // If that isn't working, then that means you will have to wait until their servers are back up. Another solution
-        // is to use a different version of their model that works like: `c0c0ac362b03416da06ab3fa36fb58e3`
-        // so you would change from:
-        // .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-        // to:
-        // .predict('c0c0ac362b03416da06ab3fa36fb58e3', req.body.input)
         .predict(Clarifai.FACE_DETECT_MODEL, req.body.input)
         .then(data => {
             res.json(data);
