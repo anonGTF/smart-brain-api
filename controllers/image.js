@@ -1,22 +1,22 @@
 const Clarifai = require('clarifai');
 const app = new Clarifai.App({
-    apiKey: process.env.API_KEY
+    apiKey: process.env.API_CLARIFAI
 });
 
-const multer = require('multer');
-const storage = multer.diskStorage({
+var multer = require('multer');
+var storage = multer.diskStorage({
     filename: function(req, file, callback) {
         callback(null, Date.now() + file.originalname);
     }
 });
-const imageFilter = function(req, file, cb) {
+var imageFilter = function(req, file, cb) {
     // accept image files only
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
         return cb(new Error("Only image files are allowed!"), false);
     }
     cb(null, true);
 };
-const upload = multer({ storage: storage, fileFilter: imageFilter })
+var upload = multer({ storage: storage, fileFilter: imageFilter })
 
 
 const cloudinary = require("cloudinary");
@@ -25,6 +25,7 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
 
 const handleImageUpload = () => (req, res) => {
     console.log(req.files);
@@ -36,28 +37,34 @@ const handleImageUpload = () => (req, res) => {
         .then(results => res.json(results));
 }
 
-const handleApiCall = (req, res) => {
-    app.models
-        .predict(Clarifai.FACE_DETECT_MODEL, req.body.input)
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+
+const handleApiCall = () => (req, res) => {
+    app.models.predict("a403429f2ddf4b49b307e318f00e528b", req.body.input)
         .then(data => {
             res.json(data);
         })
-        .catch(err => res.status(400).json('unable to work with API'))
+        .catch(err => res.status(400).json(-1));
 }
 
-const handleImage = (req, res, db) => {
+
+const handleImage = (db) => (req, res) => {
     const { id } = req.body;
-    db('users').where('id', '=', id)
-        .increment('entries', 1)
-        .returning('entries')
-        .then(entries => {
-            res.json(entries[0]);
+
+    db("users")
+        .where("id", "=", id)
+        .increment("entry", 1)
+        .returning("entry")
+        .then(entry => {
+            if (entry.length) {
+                res.json(entry);
+            } else {
+                res.status(400).json("unable to get entries of user with id = " + id);
+            }
         })
-        .catch(err => res.status(400).json('unable to get entries'))
+        .catch(err => res.status(400).json("unable to get entries"));
 }
 
-module.exports = {
-    handleImage,
-    handleApiCall,
-    handleImageUpload
-}
+module.exports = { handleImage, handleApiCall, handleImageUpload }

@@ -14,21 +14,20 @@ const image = require('./controllers/image');
 const PORT = process.env.PORT || 5000;
 const environment = process.env.NODE_ENV || 'development';
 const knexConfig = require('./knexfile')[environment];
-
 const db = knex(knexConfig);
 const app = express();
 
 app.use(bodyParser.json());
-app.use(cors())
 app.use(formData.parse());
+app.use(cors());
 
 app.get('/', (req, res) => { res.send("Hello world") })
 app.post('/signin', signin.handleSignin(db, bcrypt))
-app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) })
-app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) })
-app.put('/image', (req, res) => { image.handleImage(req, res, db) })
-app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) })
-app.post('/image-upload', (req, res) => { image.handleImageUpload(req, res) })
+app.post('/register', register.handleRegister(db, bcrypt))
+app.get('/profile/:id', profile.handleProfileGet(db))
+app.put('/image', image.handleImage(db))
+app.post('/imageurl', image.handleApiCall())
+app.post('/image-upload', image.handleImageUpload())
 
 app.get("*", (req, res) => {
     res.send("sorry, nothing here((");
